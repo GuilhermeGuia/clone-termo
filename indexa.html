@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>JOGO DO BAGULHO</title>
+    <style>
+        .box {
+            background-color: aqua;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron text-center text-dange">
+            <h1>Jogo do PHELIPE</h1>
+        </div>
+        <button id="fim" class="btn btn-danger">finalizar</button>
+        <div class="row" id="input_palavra"></div>
+
+
+
+
+        <div id="teclado" class="row"></div>
+    </div>
+    <script>
+        let word = [];
+        let worddb;
+        $("#fim").on('click', function (e) {
+            ConfereResultado()
+        })
+        PalavraDoServidor();
+        function PalavraDoServidor() {
+            const dbword = ['PHELIPE', 'ANA', 'FRUTA', 'GUI', 'PREDIO', 'FORRO', 'LENCOL', 'JUMA', 'VELA', 'SOL', 'ANTA', 'SOGRA', 'FESTA'];
+            let indice = getRandomInt(0, dbword.length);
+            let palavra_escolhida = dbword[indice];
+            let num_palavra_escolhida = palavra_escolhida.length;
+            let ok = confirm('Deseja iniciar com ' + num_palavra_escolhida + ' palavras?????');
+            if (ok) {
+                Inicio(num_palavra_escolhida);
+                worddb = palavra_escolhida;
+                
+            } else {
+                PalavraDoServidor();
+            }
+
+        }
+        function ConfereResultado() {
+            let num_escolhida = word.length;
+            let num_db = worddb.length;
+            if (num_escolhida == num_db) {
+                let fim = Finalizar();
+                
+            } else {
+                alert('NUMERO INSUFICIENTE DE LETRAS')
+            }
+        }
+        function Finalizar() {
+            let acertos = 0;
+            let erros = 0;
+
+
+            for (let i = 0; i < word.length; i++) {
+                if (word[i] == worddb[i]) {
+                    acertos++;
+                } else {
+                    erros++;
+                }
+            }
+            let obj = {
+                'acertos': acertos,
+                'erros': erros,
+                'palavra_certa': worddb,
+                'palavra_escolhida': word
+            }
+            return obj;
+        }
+        function PreencherPalavras() {
+            for (let i = 0; i < word.length; i++) {
+                $("#letra_" + i).html(word[i]);
+
+
+
+            }
+        }
+
+        function Inicio(qtde) {
+            let num = 0;
+            let teclas = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'];
+            let corpo = "";
+            let cont = 0;
+            for (let i = 0; i < teclas.length; i++) {
+
+                corpo += `<div class='col-1'>
+                    <button class='btn btn-secondary btn-block mb-3 tecla' data-ref='${teclas[i].toLocaleUpperCase()}'>${teclas[i]}</button>
+                    </div>`
+                if (cont == 10) {
+                    corpo += `<br>`
+
+                    cont = 0;
+                }
+                cont++;
+            }
+            $("#teclado").html(corpo)
+
+            $(".tecla").on('click', function (e) {
+                let letra = $(this).data('ref');
+
+                if (num < qtde) {
+                    EscolhendoLetra(letra)
+                    num++;
+
+                } else {
+                    alert('numero de escolha excedida')
+                    //FINALIZA JOG
+                }
+                // $(this)
+                // .attr('disabled',true)
+                // .removeClass('btn-secondary')
+                // .addClass('btn-danger')
+
+            })
+            let corpo_input = "";
+            let coluna = RetornaColuna(qtde)
+
+            for (let k = 0; k < qtde; k++) {
+                corpo_input += `<div class="col-sm-${coluna} box" id='letra_${k}'>L ${[k + 1]}</div>`
+            }
+
+            $("#input_palavra").html(corpo_input)
+
+        }
+        function EscolhendoLetra(letra) {
+
+            word.push(letra);
+            PreencherPalavras()
+            return word;
+        }
+
+        function RetornaColuna(num) {
+            switch (num) {
+                case 1:
+                    return 12
+                    break;
+                case 2:
+                    return 6
+                    break;
+                case 3:
+                    return 4
+                    break;
+
+                case 4:
+                    return 3
+                    break;
+                case 5:
+                    return 2
+                    break;
+                case 6:
+                    return 2
+                    break;
+
+                default:
+                    return 1
+                    break;
+            }
+
+        }
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+    </script>
+</body>
+
+</html>

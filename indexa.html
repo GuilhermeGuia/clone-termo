@@ -58,7 +58,7 @@
             let num_db = worddb.length;
             if (num_escolhida == num_db) {
                 let fim = Finalizar();
-                
+                console.log(fim)
             } else {
                 alert('NUMERO INSUFICIENTE DE LETRAS')
             }
@@ -86,9 +86,6 @@
         function PreencherPalavras() {
             for (let i = 0; i < word.length; i++) {
                 $("#letra_" + i).html(word[i]);
-
-
-
             }
         }
 

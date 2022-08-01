@@ -10,6 +10,8 @@ const layoutDiv = document.querySelector('.layout');
 
 const numerosTentativas = 6;
 
+const word = [];
+
 // for (let tecla of teclas) {
 //     if (tecla === 'enter'){
 //         TecladoDiv.innerHTML += `<div class="tecla result">${tecla}</div>`;
@@ -21,33 +23,55 @@ const numerosTentativas = 6;
 // }
 
 function inicio() {
-    // funcao construtora do layout 
-    
+  // funcao construtora do layout 
 
-    montarHub();
-    montarTeclado();
+  const tamanho_palavra = getPalavraServidor();
+  montarHub(tamanho_palavra);
+  montarTeclado();
+
+  const listaDeTeclas = TecladoDiv.querySelectorAll('.tecla')
+  for (let i = 0; i < listaDeTeclas.length; i++) {
+    listaDeTeclas[i].addEventListener('click', () => {
+      escolhendoLetra(listaDeTeclas[i].getAttribute('data-ref'));
+    })
+  }
+
+}
+
+function getPalavraServidor() {
+
+  const dbword = ['PHELIPE', 'ANA', 'FRUTA', 'GUI', 'PREDIO', 'FORRO', 'LENCOL', 'JUMA', 'VELA', 'SOL', 'ANTA', 'SOGRA', 'FESTA'];
+
+  let indice = getRandomInt(0, dbword.length);
+
+  let palavra_sorteada = dbword[indice];
+
+  let tamanho_palavra = palavra_sorteada.length;
+  console.log(palavra_sorteada)
+  return tamanho_palavra;
 
 }
 
 
-function montarHub(){
-    let corpoColuna = "";
-    let numeroColuna = 5;
-    //montando as colunas
-    for (let k = 0; k < numeroColuna; k++){
-        corpoColuna += `<div class="row-item ${k === 0 ? 'active' : ''}" id="letra_${k}">${k+1}</div>`;
-    }
-    
-    // motando as colunas 
 
-    let corpoLinhas = "";
-    for (let j = 0; j < numerosTentativas; j++){
-        corpoLinhas += `<div class="layout-row ${j === 0 ? 'visualizada': ''}">${corpoColuna}</div>`;
-    }
+function montarHub(qtde_palavras) {
+  let corpoColuna = "";
+  let numeroColuna = qtde_palavras;
+  //montando as colunas
+  for (let k = 0; k < numeroColuna; k++) {
+    corpoColuna += `<div class="row-item " id="letra_${k}"></div>`;
+  }
 
-    // montando o corpo do layout
+  // motando as colunas 
 
-    layoutDiv.innerHTML = corpoLinhas;
+  let corpoLinhas = "";
+  for (let j = 0; j < numerosTentativas; j++) {
+    corpoLinhas += `<div class="layout-row ${j === 0 ? 'visualizada' : ''}">${corpoColuna}</div>`;
+  }
+
+  // montando o corpo do layout
+
+  layoutDiv.innerHTML = corpoLinhas;
 }
 
 
@@ -87,20 +111,72 @@ function montarTeclado() {
 
   for (let i = 0; i < teclas.length; i++) {
     if (teclas[i].includes("img") || teclas[i].includes("enter")) {
-      corpo += `<div class="tecla ${
-        teclas[i].toUpperCase() === "ENTER" ? "result" : ""
-      }" data-ref="${teclas[i].toUpperCase() === "ENTER" ? "ENTER" : "IMG"}">${
-        teclas[i]
-      }</div>`;
+      corpo += `<div class="tecla ${teclas[i].toUpperCase() === "ENTER" ? "result" : ""
+        }" data-ref="${teclas[i].toUpperCase() === "ENTER" ? "ENTER" : "DELETE"}">${teclas[i]
+        }</div>`;
     } else {
-      corpo += `<div class="tecla" data-ref="${teclas[i].toUpperCase()}">${
-        teclas[i]
-      }</div>`;
+      corpo += `<div class="tecla" data-ref="${teclas[i].toUpperCase()}">${teclas[i]
+        }</div>`;
     }
   }
-//   console.log(corpo);
+  //   console.log(corpo);
   TecladoDiv.innerHTML = corpo;
+
 }
+
+function adicionarHub() {
+
+}
+
+
+function escolhendoLetra(palavra) {
+  
+  if(palavra.toLowerCase() === 'enter') {
+    TestarPalavras();
+
+  }else if (palavra.toLowerCase() === 'delete'){
+    deletarIndice();
+    console.log('entrei no delete')
+  }else{
+    word.push(palavra);
+    preencherPalavra();
+    console.log(word);
+  }
+ 
+  return word;
+
+}
+
+function preencherPalavra() {
+  for (let j = 0; j < word.length; j++) {
+
+    const listaBlocos = layoutDiv.querySelector('.layout-row.visualizada')
+
+    const a = listaBlocos.querySelector(`#letra_${j}`)
+
+    a.innerHTML = word[j]
+
+  }
+}
+
+function TestarPalavras(){
+
+}
+
+function deletarIndice(){
+
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+
+
+// eventos
+
 
 
 

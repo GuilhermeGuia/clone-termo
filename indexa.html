@@ -32,12 +32,16 @@
         <div id="teclado" class="row"></div>
     </div>
     <script>
+
+        console.log(document.querySelector('#teclado'))
         let word = [];
         let worddb;
         $("#fim").on('click', function (e) {
             ConfereResultado()
         })
+        
         PalavraDoServidor();
+        
         function PalavraDoServidor() {
             const dbword = ['PHELIPE', 'ANA', 'FRUTA', 'GUI', 'PREDIO', 'FORRO', 'LENCOL', 'JUMA', 'VELA', 'SOL', 'ANTA', 'SOGRA', 'FESTA'];
             let indice = getRandomInt(0, dbword.length);
@@ -138,7 +142,7 @@
         function EscolhendoLetra(letra) {
 
             word.push(letra);
-            PreencherPalavras()
+            PreencherPalavras();
             return word;
         }
 
@@ -175,7 +179,9 @@
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min)) + min;
         }
-
+        $('.tecla').on('click', function(){
+            console.log('dinheiro')
+        })
     </script>
 </body>
 
